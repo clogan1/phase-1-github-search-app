@@ -1,10 +1,7 @@
 //Notes:
 
-//User Search end point: https://api.github.com/search/users?q=octocat ==> https://api.github.com/search/users?q=${value from input field}
-
 //global variables
-//declaring searchInput variable to house 
-let searchInput;
+
 
 //Fetch Data
 
@@ -63,7 +60,6 @@ function renderUserCards(data){
 
 }
 
-
 function repoRender(data) {
     //create elements
     let li = document.createElement('li')
@@ -98,10 +94,5 @@ document.querySelector('#github-form').addEventListener('submit', (e) => {
 //renderUserCards(fetchSearchUser(searchInput));
    fetchSearchUser(searchInput);
 }) 
-
-//card click handler
-//fetches data from User Repo Endpoint
-//empties card container
-//renders user Repo info
 
 
