@@ -1,30 +1,27 @@
-//Notes:
-
 //global variables
 
 
-//Fetch Data
+//Fetches
 
-
-//User Search End Point based on form submit [2]
+//User Search End Point fetch function, with search form input as parameter
 function fetchSearchUser(searchInput) {
-    fetch(`https://api.github.com/search/users?q=${searchInput}`)
+    fetch(`https://api.github.com/search/users?q=${searchInput}`) //url based on search input
     .then(res => res.json())
-    .then(json => json.items.forEach(renderUserCards))
+    .then(json => json.items.forEach(renderUserCards)) //json included a nested object (items), for each user in json.items, execute the renderUserCard function
 
 }
 
-//User Repos Endpoint function
+//User Repos Endpoint fetch function, with username as parameter
 
 function fetchUserRepos(username){
     fetch(`https://api.github.com/users/${username}/repos`)
     .then(res => res.json())
-    .then(json => json.forEach(repoRender))
+    .then(json => json.forEach(repoRender)) //for each repo in json, execute the repoRender function
 }
 
 
 //DOM Manipulations
-//render user cards for each user that comes up from search [3]
+//render user cards for each user that comes up from search
 //include username, avatar, and link to their profile
 
 function renderUserCards(data){
@@ -40,21 +37,18 @@ function renderUserCards(data){
     h2Title.textContent = data.login
     img.src = data.avatar_url
     pUrl = data.url
-    //a.href = data.url
-
 
     //append to DOM
-    //pUrl.append(a)
     li.append(img, h2Title, pUrl)
     document.querySelector('#user-list').append(li)
 
-//Click event listener on card 
+    //add event listener on li
 
-   li.addEventListener('click', () => {
+   li.addEventListener('click', () => { 
        //clear content
        document.querySelector('#user-list').innerHTML = ''
-        document.querySelector('#repos-list').innerHTML = ''
-        //call function to pull and generate repo page
+       document.querySelector('#repos-list').innerHTML = ''
+       //call function to pull and generate repo page, passing username as parameter (as this is what goes into the API url)
        fetchUserRepos(data.login)
    })
 
@@ -67,31 +61,37 @@ function repoRender(data) {
 
     //populate with content
     li.className = 'repoCard'
-    h2Title.textContent = data.name
+    h2Title.textContent = data.name //pulls name of the repo
 
 
     //append to DOM
     li.append(h2Title)
     document.querySelector('#repos-list').append(li)
+
+    //will stay on the DOM until a new search is submitted
 }
 
 
 
 //Event Listeners / Handlers
-//User search form on SUBMIT returns a search term that is passed in the fetch data function [1]
+//User search form on SUBMIT returns a search term that is passed as argument in the fetchSearchUser function
 
 //Search Event
 document.querySelector('#github-form').addEventListener('submit', (e) => {
+    //prevent auto-refresh
     e.preventDefault() 
     //console.log(e.target.search.value)
+
     //clear Ul
     document.querySelector('#user-list').innerHTML = ''
     document.querySelector('#repos-list').innerHTML = ''
 
+    //set value of searchInput
    let searchInput = e.target.search.value
+   //format the input to remove spaces and replace with "+" so the url will work
    searchInput = searchInput.split(" ").join('+')
    //console.log(searchInput)
-//renderUserCards(fetchSearchUser(searchInput));
+   
    fetchSearchUser(searchInput);
 }) 
 
